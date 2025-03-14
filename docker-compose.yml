@@ -19,16 +19,16 @@ services:
   apache:
     build: apache/
     ports:
-      - 80:80
+      - 8080:80
     volumes:
-      - app-web:/var/www/html/
+      - proyecto:/var/www/html/
 
   php:
     build: php/
     ports:
       - 9000:9000
     volumes:
-      - app-web:/var/www/html/
+      - proyecto:/var/www/html/
 
 volumes: 
-  app-web:
+  proyecto:
