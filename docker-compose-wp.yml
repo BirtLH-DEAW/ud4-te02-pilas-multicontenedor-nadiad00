@@ -1,32 +1,44 @@
-version: '3'
-
-services: 
-  mysql_wordpress:
-    image: mysql:5.7
-    ports:
-      - 3306:3306
+services:
+  mysql:
+    image: docker.io/bitnami/mysql:latest
+    volumes:
+      - 'mysql_data:/bitnami/mysql'
     environment:
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: wp_dwes
       MYSQL_PASSWORD: dwes
-      MYSQL_DATABASE: wordpress
-
-  phpmyadmin:
-    image: phpmyadmin:latest
-    ports:
-      - 8081:80
-    environment:
-      PMA_HOST: mysql_wordpress
+      MYSQL_DATABASE: dwes
       MYSQL_ROOT_PASSWORD: root
 
   wordpress:
-    image: wordpress:latest
-    depends_on:
-      - mysql_wordpress
+    image: docker.io/bitnami/wordpress:6
     ports:
-          - 8080:80
+      - '8080:8080'
+      - '443:8443'
+    volumes:
+      - 'wordpress_data:/bitnami/wordpress'
+    depends_on:
+      - mysql
     environment:
-          WORDPRESS_DB_HOST: mysql_wordpress
-          WORDPRESS_DB_USER: wp_dwes
-          WORDPRESS_DB_PASSWORD: dwes
-          WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DATABASE_HOST: mysql
+      WORDPRESS_DATABASE_PORT_NUMBER: 3306
+      WORDPRESS_DATABASE_USER: wp_dwes
+      WORDPRESS_DATABASE_PASSWORD: dwes
+      WORDPRESS_DATABASE_NAME: dwes
+      WORDPRESS_BLOG_NAME: 'ndalessio'
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    depends_on:
+      - mysql
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+
+
+volumes:
+  mysql_data:
+    driver: local
+  wordpress_data:
+    driver: local
