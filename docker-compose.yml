@@ -37,6 +37,28 @@ services:
     environment:
       PMA_HOST: mysql
       MYSQL_ROOT_PASSWORD: root
+  
+  mysql_wordpress:
+    image: mysql:5.7
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: dwes
+      MYSQL_PASSWORD: dwes
+      MYSQL_DATABASE: wordpress
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - mysql_wordpress
+    ports:
+          - 8082:80
+    environment:
+          WORDPRESS_DB_HOST: mysql_wordpress
+          WORDPRESS_DB_USER: dwes
+          WORDPRESS_DB_PASSWORD: dwes
+          WORDPRESS_DB_NAME: wordpress
 
 
 volumes: 
